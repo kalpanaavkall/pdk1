@@ -1,0 +1,12 @@
+function [nColors cidx c_center nrows ncols I]=stoerwagner(m)
+I = imresize(m,[256,256]);
+I = imadjust(I,stretchlim(I));
+I_HIS = rgb2hsi(I);
+cform = makecform('srgb2lab');
+lab_he = applycform(I,cform);
+ab = double(lab_he(:,:,2:3));
+nrows = size(ab,1);
+ncols = size(ab,2);
+ab = reshape(ab,nrows*ncols,2);
+nColors = 3;
+[cidx c_center] = kmeans(ab,nColors,'distance','sqEuclidean','Replicates',3);
